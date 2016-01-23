@@ -1,3 +1,4 @@
 .idea
 *.pyc
 chatOn.egg-info
+env
