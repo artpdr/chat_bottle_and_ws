@@ -1,0 +1,9 @@
+body{
+    width:100%;
+    height: 100%;
+}
+#board_div {
+    width: 80%;
+    height: 80%;
+    overflow: auto;
+}

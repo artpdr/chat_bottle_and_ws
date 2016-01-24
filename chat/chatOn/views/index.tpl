@@ -1,24 +1,27 @@
 <!DOCTYPE HTML>
 <html>
-    <head>
-        <title>
-            ChatOn - A simple Chat made with bottle
-        </title>
-    </head>
-    <body>
+<head>
+    <title>ChatOn - A simple Chat made with bottle</title>
+</head>
+<body>
 
-        <!--shared board-->
-        <div id="board_div">
+    <div>
+        <p>Chat On for You!</p>
+    </div>
 
+    <div>
+        <form action="/chat" method="POST">
+            <label for="username">username: </label>
+            <input type="text" name="username" id="username" placeholder="Insert a username for this session...">
+        </form>
+
+        <div id="error">
+            % error = get('error', '')
+            % if error:
+                *{{error}}
+            % end
         </div>
+    </div>
 
-        <!--messages input-->
-        <div id="msg_div">
-            <form action="" method="post">
-                <label for="input_msg">Text to send: </label>
-                <input type="text" id="input_msg" name="input_msg" placeholder="Insert a message">
-            </form>
-        </div>
-
-    </body>
+</body>
 </html>
