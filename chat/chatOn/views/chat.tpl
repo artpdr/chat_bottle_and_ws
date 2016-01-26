@@ -11,7 +11,14 @@
     <p>Logged in as: {{username}}</p>
 
     <!--shared board-->
+    <h2>Chat:</h2>
     <div id="board_div">
+
+    </div>
+
+    <!--users logged-->
+    <h2>Users:</h2>
+    <div id="users_logged_div">
 
     </div>
 
@@ -48,7 +55,27 @@
         }
 
         ws.onmessage = function(msg) {
-            $('#board_div').append('<p>'+ msg.data +'</p>')
+            var prefix_message = 'msg:';
+            var prefix_user_in = 'usr_in:';
+            var prefix_user_out = 'usr_out';
+
+            if(msg.data.indexOf(prefix_message) == 0){
+                $('#board_div').append('<p>'+ msg.data.substr(4) +'</p>');
+            }
+            else if(msg.data.indexOf(prefix_user_in) == 0){
+                var usr_names = msg.data.substr(7);
+                var usr_names_array = usr_names.split(' ');
+                var usr_format_html = '';
+                var len_usr_names_array = usr_names_array.length;
+                for (var i = 0; i < len_usr_names_array; i++) {
+                    usr_format_html += '<div class = "user ' + usr_names_array[i] + '">' + usr_names_array[i] + '</div>'
+                }
+                $('#users_logged_div').html(usr_format_html);
+            }
+            else if(msg.data.indexOf(prefix_user_out) == 0){
+                var usr_class_html = '.' + msg.data.substr(7);
+                $(usr_class_html).remove();
+            }
         }
     </script>
 

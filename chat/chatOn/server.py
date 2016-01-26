@@ -15,6 +15,9 @@ usernames_taken = []
 
 @app.route('/websocket')
 def handle_websocket():
+    prefix_message = 'msg:'
+    prefix_user_in = 'usr_in:'
+    prefix_user_out = 'usr_out'
     wsock = request.environ.get('wsgi.websocket')
     if not wsock:
         abort(400, 'Expected WebSocket request.')
@@ -24,10 +27,15 @@ def handle_websocket():
     except WebSocketError:
         return
 
+    if ' ' in username:
+        return
+
     open_websockets.update({username: wsock})
     for key in open_websockets.keys():
         try:
-            open_websockets[key].send(username + ' logged in...')
+            usernames_to_send = ' '.join(usernames_taken)
+            open_websockets[key].send(prefix_user_in + usernames_to_send)
+            open_websockets[key].send(prefix_message + username + ' logged in...')
         except WebSocketError:
             del open_websockets[key]
 
@@ -36,7 +44,7 @@ def handle_websocket():
             message = wsock.receive()
             for key in open_websockets.keys():
                 try:
-                    open_websockets[key].send(username + ': ' + message)
+                    open_websockets[key].send(prefix_message + username + ': ' + message)
                 except WebSocketError:
                     del open_websockets[key]
         except WebSocketError:
@@ -44,13 +52,20 @@ def handle_websocket():
             usernames_taken.remove(username)
             for key in open_websockets.keys():
                 try:
-                    open_websockets[key].send(username + ' logged out...')
+                    open_websockets[key].send(prefix_user_out + username)
+                    open_websockets[key].send(prefix_message + username + ' logged out...')
                 except WebSocketError:
                     del open_websockets[key]
             break
         except:
             del open_websockets[username]
             usernames_taken.remove(username)
+            for key in open_websockets.keys():
+                try:
+                    open_websockets[key].send(prefix_user_out + username)
+                    open_websockets[key].send(prefix_message + username + ' logged out...')
+                except WebSocketError:
+                    del open_websockets[key]
             break
 
 
@@ -65,8 +80,11 @@ def chat_page():
     if username:
         if username in usernames_taken:
             return template('index', error = 'This username is currently in use... choose another!')
+        elif ' ' in username:
+            return template('index', error = 'The username can\'t contain spaces!')
         else:
             usernames_taken.append(username)
+            usernames_taken.sort()
             return template('chat', username = username)
     else:
         return template('index')
