@@ -7,27 +7,34 @@
     <title></title>
 </head>
 <body>
+    <div id="container">
 
-    <p>Logged in as: {{username}}</p>
+        <p id="identify">Logged in as: <b>{{username}}</b></p>
 
-    <!--shared board-->
-    <h2>Chat:</h2>
-    <div id="board_div">
+        <!--shared board-->
+        <div id="board_outer_div">
+            <h2>Chat:</h2>
+            <div id="board_div">
 
-    </div>
+            </div>
+        </div>
 
-    <!--users logged-->
-    <h2>Users:</h2>
-    <div id="users_logged_div">
+        <!--users logged-->
+        <div id="users_outer_div">
+            <h2>Users:</h2>
+            <div id="users_logged_div">
 
-    </div>
+            </div>
+        </div>
 
-    <!--messages input-->
-    <div id="msg_div">
-        <form id="msg_form" action="" method="post">
-            <label for="input_msg">Text to send: </label>
-            <input type="text" id="input_msg" name="input_msg" placeholder="Insert a message">
-        </form>
+        <!--messages input-->
+        <div id="msg_div">
+            <form id="msg_form" action="" method="post">
+                <label for="input_msg">Text to send: </label>
+                <input type="text" id="input_msg" name="input_msg" placeholder="Insert a message">
+            </form>
+        </div>
+
     </div>
 
     <script>
@@ -50,6 +57,7 @@
                 var message_to_send = $("#input_msg").val();
                 if (message_to_send.trim() != ''){
                     ws.send(message_to_send);
+                    $("#input_msg").val('');
                 }
             });
         }
