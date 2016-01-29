@@ -48,7 +48,7 @@
         else if ("MozWebSocket" in window )
             var ws = new MozWebSocket ( host );
         else
-            $('html').href("Get a real browser which supports WebSocket...");
+            $('html').html("Get a real browser which supports WebSocket...");
 
         ws.onopen = function() {
             ws.send('{{username}}');
